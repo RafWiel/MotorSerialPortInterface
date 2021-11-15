@@ -39,7 +39,12 @@ namespace SerialPortTestGuiApp
 
         private void ReadLsButton_Click(object sender, RoutedEventArgs e)
         {
-            _motorInterface.RunCommand();
+            _motorInterface.GetLsMicroFirmware();
+        }
+
+        private void ReadHsButton_Click(object sender, RoutedEventArgs e)
+        {
+            _motorInterface.GetHsMicroFirmware();
         }
 
         #endregion

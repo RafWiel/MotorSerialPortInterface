@@ -9,7 +9,26 @@ using Xunit;
 namespace SerialPortTestConsole.Tests
 {
     public class MotorInterfaceTests
-    {
+    {        
+        [Fact]
+        public void ValidateArgs_ShouldSucceed()
+        {            
+            Assert.True(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9600", "command:ls" }));            
+        }
+
+        [Fact]
+        public void ValidateArgs_ShouldFail()
+        {                        
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "command:ls"  }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9600", "command:ls", "fourth arg" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "portX:com1", "baud:9600", "command:ls" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baudX:9600", "command:ls" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9600", "commandX:ls" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1!", "baud:9600", "command:ls" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9601", "command:ls" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9600", "command:xs" }));
+        }
+
         [Fact]
         public void WaitForResponse_ReturnImmediatelyOnResponse()
         {

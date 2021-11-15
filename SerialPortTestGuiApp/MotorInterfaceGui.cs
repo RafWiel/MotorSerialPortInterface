@@ -24,51 +24,75 @@ namespace SerialPortTestGuiApp
             set => Set(ref _lsFirmware, value);
         }
 
+        private string _hsFirmware;
+        public string HsFirmware
+        {
+            get => _hsFirmware;
+            set => Set(ref _hsFirmware, value);
+        }
+
         #endregion
 
         #region Methods
 
-        public void RunCommand()
+        public void GetLsMicroFirmware()
         {
             Task.Run(() =>
             {
-                string output = string.Empty;
+                var result = RunCommand("port:com6 baud:9600 command:ls");
+                ParseOutput(result);
+            });            
+        }
 
-                SetMouseCursor(Cursors.Wait);
-
-                try
-                {                    
-                    //run console application
-                    using (var process = new Process())
-                    {
-                        process.StartInfo = new ProcessStartInfo
-                        {
-                            FileName = "SerialPortTestConsole.exe",
-                            Arguments = "p:COM6 f:ls",
-                            UseShellExecute = false,
-                            RedirectStandardOutput = true,
-                            CreateNoWindow = true
-                        };
-
-                        process.Start();
-                        process.WaitForExit();
-
-                        //read output
-                        output = process.StandardOutput.ReadToEnd();
-
-                        ParseOutput(output);
-                        Console.Write(output);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    gLog.Write(ex.ToString());
-                }
-                finally
-                {
-                    SetMouseCursor(null);
-                }
+        public void GetHsMicroFirmware()
+        {
+            Task.Run(() =>
+            {
+                var result = RunCommand("port:com6 baud:9600 command:hs");
+                ParseOutput(result);
             });
+        }
+
+        private string RunCommand(string args)
+        {
+            string result = string.Empty;
+            
+            SetMouseCursor(Cursors.Wait);
+
+            try
+            {                    
+                //run console application
+                using (var process = new Process())
+                {
+                    process.StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "SerialPortTestConsole.exe",
+                        Arguments = args,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    };
+
+                    process.Start();
+                    process.WaitForExit();
+
+                    //read output
+                    result = process.StandardOutput.ReadToEnd();
+                        
+                    Console.Write(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                gLog.Write(ex.ToString());
+            }
+            finally
+            {
+                SetMouseCursor(null);
+            }
+            
+
+            return result;
         }
 
         private void ParseOutput(string output)
@@ -84,8 +108,11 @@ namespace SerialPortTestGuiApp
                 return;
             }
 
-            if (output.StartsWith("Result: "))
-                LsFirmware = output.Replace("Result: ", string.Empty).Trim();            
+            if (output.StartsWith("LS: "))
+                LsFirmware = output.Replace("LS: ", string.Empty).Trim();
+
+            if (output.StartsWith("HS: "))
+                HsFirmware = output.Replace("HS: ", string.Empty).Trim();
         }
 
         private void SetMouseCursor(Cursor cursor)

@@ -17,7 +17,23 @@ namespace Communication.Serial
         public delegate void DataReceivedDelegate(string data);
         public event DataReceivedDelegate DataReceived;
         
-        private SerialPort _serialPort;       
+        private SerialPort _serialPort;
+
+        public static List<int> BaudRates = new List<int>(new int[] 
+        {
+            300,
+            1200,
+            2400,
+            4800,
+            9600,
+            14400,
+            19200,
+            28800,
+            38400,
+            57600,
+            115200,
+            230400            
+        });
 
         #endregion
 
@@ -90,8 +106,8 @@ namespace Communication.Serial
                 readAction();
             }
             catch (Exception ex)
-            {                
-                Console.WriteLine(ex.ToString());
+            {
+                LogError(ex.Message);
             }            
         }
 
@@ -109,7 +125,7 @@ namespace Communication.Serial
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                LogError(ex.Message);
             }
             finally
             {
@@ -128,8 +144,13 @@ namespace Communication.Serial
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                LogError(ex.Message);
             }
+        }
+
+        private void LogError(string message)
+        {
+            Console.WriteLine("Error: {0}", message);
         }
 
         #endregion

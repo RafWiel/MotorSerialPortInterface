@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,8 +13,15 @@ namespace SerialPortTestConsole
     {
         #region Initialization
 
-        private SerialConnection _serial = new SerialConnection();
+        private SerialConnection _serial = new SerialConnection();        
         private string _response = string.Empty;
+        private CommandType _commandType;
+
+        private enum CommandType
+        {
+            LS,
+            HS
+        }
 
         public MotorInterface()
         {              
@@ -31,9 +39,74 @@ namespace SerialPortTestConsole
 
         #endregion               
 
-        #region Methods
+        #region Methods        
 
-        public void Initialize(string port, int baudRate)
+        public static bool ValidateArgs(string[] args)
+        {
+            if (args.Length != 3)
+                return false;
+
+            if (args.Count(u => u.StartsWith("port:")) == 0)
+                return false;
+
+            if (args.Count(u => u.StartsWith("baud:")) == 0)
+                return false;
+
+            if (args.Count(u => u.StartsWith("command:")) == 0)
+                return false;
+
+            //expect comX
+            var port = args[0].Replace("port:", string.Empty);
+            if (Regex.IsMatch(port, @"^com\d+$") == false)
+                return false;
+
+            //expect valid baud rate
+            var baudStr = args[1].Replace("baud:", string.Empty);
+            int baud = 0;
+
+            if (int.TryParse(baudStr, out baud) == false)
+                return false;
+
+            if (SerialConnection.BaudRates.Contains(baud) == false)
+                return false;
+
+            //expect ls or hs
+            var command = args[2].Replace("command:", string.Empty);
+            if (Regex.IsMatch(command, @"^ls$|^hs$") == false)
+                return false;
+
+            return true;
+        }
+
+        public void Run(string[] args)
+        {
+            try
+            {
+                var port = args[0].Replace("port:", string.Empty);
+                var baud = Convert.ToInt32(args[1].Replace("baud:", string.Empty));
+                var command = args[2].Replace("command:", string.Empty);
+
+                //open port
+                Initialize(port, baud);
+
+                //run command
+                switch (command)
+                {
+                    case "ls":
+                        GetLsMicroFirmware();
+                        break;
+                    case "hs":
+                        GetHsMicroFirmware();
+                        break;
+                }                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: {0}", ex.Message);
+            }
+        }
+
+        private void Initialize(string port, int baudRate)
         {
             //validate input
             if (String.IsNullOrWhiteSpace(port))
@@ -55,13 +128,15 @@ namespace SerialPortTestConsole
                 Console.WriteLine("Error: Port open failed");
         }
 
-        public void GetLsMicroFirmware()
+        private void GetLsMicroFirmware()
         {
+            _commandType = CommandType.LS;
             RunCommand("v\n");            
         }
 
-        public void GetHsMicroFirmware()
+        private void GetHsMicroFirmware()
         {
+            _commandType = CommandType.HS;
             RunCommand("V\n");
         }
 
@@ -73,7 +148,7 @@ namespace SerialPortTestConsole
             if (WaitForResponse() == false)
                 Console.WriteLine("Error: Command timed out");
             else
-                Console.WriteLine("Result: {0}", _response);
+                Console.WriteLine("{0}: {1}", _commandType, _response);
         }
 
         private void SendCommand(string command)

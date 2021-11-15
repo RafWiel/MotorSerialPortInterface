@@ -10,10 +10,15 @@ namespace SerialPortTestConsole
     {
         static void Main(string[] args)
         {
-            using (var motorInterface = new MotorInterface())
+            if (MotorInterface.ValidateArgs(args) == false)
             {
-                motorInterface.Initialize("COM6", 9600);
-                motorInterface.GetLsMicroFirmware();                
+                Console.WriteLine("Error: Incorrect parameters");
+                return;
+            }
+
+            using (var motorInterface = new MotorInterface())
+            {                
+                motorInterface.Run(args);                
             }
 
             //Console.ReadKey();

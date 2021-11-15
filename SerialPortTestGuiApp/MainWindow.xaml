@@ -10,7 +10,8 @@
     Height="450"
     MinWidth="500"
     MinHeight="300"
-    mc:Ignorable="d" WindowStartupLocation="CenterScreen">
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -30,7 +31,10 @@
                     Margin="0,10,0,0"
                     Click="ReadLsButton_Click"
                     Content="Read LS" />
-                <Button Margin="0,5,0,0" Content="Read HS" />
+                <Button
+                    Margin="0,5,0,0"
+                    Click="ReadHsButton_Click"
+                    Content="Read HS" />
             </StackPanel>
         </Border>
         <!--  Output  -->
@@ -41,7 +45,7 @@
             <TextBlock Text="LS micro firmware version" />
             <TextBox IsReadOnly="True" Text="{Binding LsFirmware}" />
             <TextBlock Margin="0,5,0,0" Text="HS micro firmware version" />
-            <TextBox />
+            <TextBox IsReadOnly="True" Text="{Binding HsFirmware}" />
         </StackPanel>
     </Grid>
 </Window>
