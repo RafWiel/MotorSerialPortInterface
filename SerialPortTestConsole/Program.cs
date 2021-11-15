@@ -10,10 +10,18 @@ namespace SerialPortTestConsole
     {
         static void Main(string[] args)
         {
-            var motor = new MotorInterface();
+            using (var motorInterface = new MotorInterface())
+            {
+                motorInterface.Initialize("COM6", 9600);
 
-            motor.SendData();
-            Console.ReadLine();
+                var response = motorInterface.GetLsMicroFirmware();
+                Console.WriteLine("LS: {0}", response);
+
+                response = motorInterface.GetHsMicroFirmware();
+                Console.WriteLine("HS: {0}", response);
+            }
+
+            Console.ReadKey();
         }
     }
 }

@@ -79,7 +79,7 @@ namespace Communication.Serial
                             Buffer.BlockCopy(buffer, 0, data, 0, length);
                             
                             if (DataReceived != null)
-                                DataReceived(System.Text.Encoding.UTF8.GetString(data, 0, length));
+                                DataReceived(System.Text.Encoding.ASCII.GetString(data, 0, length));
                             
                             readAction();
                         }, null);
