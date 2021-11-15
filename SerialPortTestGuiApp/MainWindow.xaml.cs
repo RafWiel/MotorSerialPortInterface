@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,27 @@ namespace SerialPortTestGuiApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Initialization
+
+        private MotorInterfaceGui _motorInterface;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _motorInterface = new MotorInterfaceGui { Window = this };
+            this.DataContext = _motorInterface;
         }
+
+        #endregion
+
+        #region Events
+
+        private void ReadLsButton_Click(object sender, RoutedEventArgs e)
+        {
+            _motorInterface.RunCommand();
+        }
+
+        #endregion
     }
 }

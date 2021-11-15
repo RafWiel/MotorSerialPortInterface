@@ -38,46 +38,42 @@ namespace SerialPortTestConsole
             //validate input
             if (String.IsNullOrWhiteSpace(port))
             {
-                Console.WriteLine("COM port not set");
+                Console.WriteLine("Error: COM port not set");
                 return;
             }
 
             if (baudRate == 0)
             {
-                Console.WriteLine("BaudRate not set");
+                Console.WriteLine("Error: BaudRate not set");
                 return;
             }
-            
-            Console.WriteLine("Opening port {0} at {1}", port, baudRate);
-                
+                            
             //open COM port
             _serial.OpenPort(port, baudRate);     
                 
-            if (_serial.IsOpen)
-                Console.WriteLine("Port opened sucessfully");
-            else
-                Console.WriteLine("Port open failed");
+            if (_serial.IsOpen == false)                
+                Console.WriteLine("Error: Port open failed");
         }
 
-        public string GetLsMicroFirmware()
+        public void GetLsMicroFirmware()
         {
-            return RunCommand("v\n");            
+            RunCommand("v\n");            
         }
 
-        public string GetHsMicroFirmware()
+        public void GetHsMicroFirmware()
         {
-            return RunCommand("V\n");
+            RunCommand("V\n");
         }
 
-        private string RunCommand(string command)
+        private void RunCommand(string command)
         {
             SendCommand(command);
 
             //asynchronous communication, wait for reponse
             if (WaitForResponse() == false)
-                Console.WriteLine("Command timed out");
-            
-            return _response;
+                Console.WriteLine("Error: Command timed out");
+            else
+                Console.WriteLine("Result: {0}", _response);
         }
 
         private void SendCommand(string command)

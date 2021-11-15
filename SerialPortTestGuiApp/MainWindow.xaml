@@ -10,7 +10,7 @@
     Height="450"
     MinWidth="500"
     MinHeight="300"
-    mc:Ignorable="d">
+    mc:Ignorable="d" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -26,7 +26,10 @@
                 <ComboBox />
                 <TextBlock Margin="0,5,0,0" Text="Baud Rate" />
                 <ComboBox />
-                <Button Margin="0,10,0,0" Content="Read LS" />
+                <Button
+                    Margin="0,10,0,0"
+                    Click="ReadLsButton_Click"
+                    Content="Read LS" />
                 <Button Margin="0,5,0,0" Content="Read HS" />
             </StackPanel>
         </Border>
@@ -36,7 +39,7 @@
             Width="300"
             VerticalAlignment="Center">
             <TextBlock Text="LS micro firmware version" />
-            <TextBox />
+            <TextBox IsReadOnly="True" Text="{Binding LsFirmware}" />
             <TextBlock Margin="0,5,0,0" Text="HS micro firmware version" />
             <TextBox />
         </StackPanel>
