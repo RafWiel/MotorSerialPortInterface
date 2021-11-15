@@ -13,20 +13,20 @@ namespace SerialPortTestConsole.Tests
         [Fact]
         public void ValidateArgs_ShouldSucceed()
         {            
-            Assert.True(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9600", "command:ls" }));            
+            Assert.True(MotorInterface.ValidateArgs(new string[] { "port:COM1", "baud:9600", "command:LS" }));            
         }
 
         [Fact]
         public void ValidateArgs_ShouldFail()
         {                        
-            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "command:ls"  }));
-            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9600", "command:ls", "fourth arg" }));
-            Assert.False(MotorInterface.ValidateArgs(new string[] { "portX:com1", "baud:9600", "command:ls" }));
-            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baudX:9600", "command:ls" }));
-            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9600", "commandX:ls" }));
-            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1!", "baud:9600", "command:ls" }));
-            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9601", "command:ls" }));
-            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:com1", "baud:9600", "command:xs" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:COM1", "command:LS"  }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:COM1", "baud:9600", "command:LS", "fourth arg" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "portX:COM1", "baud:9600", "command:LS" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:COM1", "baudX:9600", "command:LS" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:COM1", "baud:9600", "commandX:LS" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:COM1!", "baud:9600", "command:LS" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:COM1", "baud:9601", "command:LS" }));
+            Assert.False(MotorInterface.ValidateArgs(new string[] { "port:COM1", "baud:9600", "command:xS" }));
         }
 
         [Fact]

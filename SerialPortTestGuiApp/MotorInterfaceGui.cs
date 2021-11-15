@@ -3,6 +3,7 @@ using gTools.WPF;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,29 +32,94 @@ namespace SerialPortTestGuiApp
             set => Set(ref _hsFirmware, value);
         }
 
+        public string Port
+        {
+            get => App.Config.Port;
+            set
+            {
+                if (App.Config.Port == value)
+                    return;
+
+                App.Config.Port = value;
+                App.Config.Save();
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int BaudRate
+        {
+            get => App.Config.BaudRate;
+            set
+            {
+                if (App.Config.BaudRate == value)
+                    return;
+
+                App.Config.BaudRate = value;
+                App.Config.Save();
+                NotifyPropertyChanged();                
+            }
+        }
+
+        public static List<string> SerialPorts
+        {
+            get => new List<string>(SerialPort.GetPortNames());            
+        }
+
+        public static List<int> BaudRates
+        {
+            get => new List<int>(new int[]
+            {
+                300,
+                1200,
+                2400,
+                4800,
+                9600,
+                14400,
+                19200,
+                28800,
+                38400,
+                57600,
+                115200,
+                230400
+            });
+        }
+
         #endregion
 
         #region Methods
 
         public void GetLsMicroFirmware()
         {
-            Task.Run(() =>
-            {
-                var result = RunCommand("port:com6 baud:9600 command:ls");
-                ParseOutput(result);
-            });            
+            RunCommandTask("LS");
         }
 
         public void GetHsMicroFirmware()
         {
-            Task.Run(() =>
+            RunCommandTask("HS");
+        }
+
+        private void RunCommandTask(string command)
+        {
+            if (string.IsNullOrEmpty(Port))
             {
-                var result = RunCommand("port:com6 baud:9600 command:hs");
+                MessageBox.Show(Window, "COM port not set", Window.Title);
+                return;
+            }
+
+            if (BaudRate == 0)
+            {
+                MessageBox.Show(Window, "Baud Rate not set", Window.Title);
+                return;
+            }
+
+            Task.Run(() =>
+            {                
+                var result = RunCommand(String.Format("port:{0} baud:{1} command:{2}", Port, BaudRate, command));
                 ParseOutput(result);
             });
         }
 
-        private string RunCommand(string args)
+        private string RunCommand(string command)
         {
             string result = string.Empty;
             
@@ -67,7 +133,7 @@ namespace SerialPortTestGuiApp
                     process.StartInfo = new ProcessStartInfo
                     {
                         FileName = "SerialPortTestConsole.exe",
-                        Arguments = args,
+                        Arguments = command,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         CreateNoWindow = true
@@ -89,8 +155,7 @@ namespace SerialPortTestGuiApp
             finally
             {
                 SetMouseCursor(null);
-            }
-            
+            }            
 
             return result;
         }
@@ -108,6 +173,7 @@ namespace SerialPortTestGuiApp
                 return;
             }
 
+            //update Gui
             if (output.StartsWith("LS: "))
                 LsFirmware = output.Replace("LS: ", string.Empty).Trim();
 

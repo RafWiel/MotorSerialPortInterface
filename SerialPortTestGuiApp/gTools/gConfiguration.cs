@@ -7,7 +7,6 @@ using System.Xml.Serialization;
 using System.IO;
 using gTools.Log;
 using System.Windows;
-using gTools.Misc;
 
 namespace gTools.Configuration
 {

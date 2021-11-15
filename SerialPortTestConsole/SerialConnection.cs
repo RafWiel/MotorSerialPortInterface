@@ -19,21 +19,24 @@ namespace Communication.Serial
         
         private SerialPort _serialPort;
 
-        public static List<int> BaudRates = new List<int>(new int[] 
+        public static List<int> BaudRates
         {
-            300,
-            1200,
-            2400,
-            4800,
-            9600,
-            14400,
-            19200,
-            28800,
-            38400,
-            57600,
-            115200,
-            230400            
-        });
+            get => new List<int>(new int[]
+            {
+                300,
+                1200,
+                2400,
+                4800,
+                9600,
+                14400,
+                19200,
+                28800,
+                38400,
+                57600,
+                115200,
+                230400
+            });
+        }
 
         #endregion
 

@@ -57,7 +57,7 @@ namespace SerialPortTestConsole
 
             //expect comX
             var port = args[0].Replace("port:", string.Empty);
-            if (Regex.IsMatch(port, @"^com\d+$") == false)
+            if (Regex.IsMatch(port, @"^COM\d+$") == false)
                 return false;
 
             //expect valid baud rate
@@ -72,7 +72,7 @@ namespace SerialPortTestConsole
 
             //expect ls or hs
             var command = args[2].Replace("command:", string.Empty);
-            if (Regex.IsMatch(command, @"^ls$|^hs$") == false)
+            if (Regex.IsMatch(command, @"^LS$|^HS$") == false)
                 return false;
 
             return true;
@@ -87,15 +87,15 @@ namespace SerialPortTestConsole
                 var command = args[2].Replace("command:", string.Empty);
 
                 //open port
-                Initialize(port, baud);
+                Initialize(port, baud);                
 
                 //run command
                 switch (command)
                 {
-                    case "ls":
+                    case "LS":
                         GetLsMicroFirmware();
                         break;
-                    case "hs":
+                    case "HS":
                         GetHsMicroFirmware();
                         break;
                 }                
