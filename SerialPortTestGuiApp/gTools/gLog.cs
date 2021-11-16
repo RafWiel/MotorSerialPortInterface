@@ -1,89 +1,53 @@
 ﻿using System;
-//using System.Collections.Generic;
-//using System.Text;
 using System.IO;
-using System.Diagnostics;
 
 namespace gTools.Log
 {    
     public class gLog
     {
-        private static StreamWriter _logFile = null;
-        private static string _fileName = string.Empty;
-        private static string _filePath = string.Empty;
-        private static int _maxSize = 4096000;
+        #region Initialization
 
+        public static string FilePath { get; set; } = string.Empty;
+        public static int MaxSize { get; set; } = 4096000;
+
+        private static StreamWriter _logFile = null;
+        
+        private static string _fileName = string.Empty;
         public static string FileName
         {
-            get
-            {
-                return _fileName;
-            }
+            get => _fileName;
             set
             {
                 _fileName = value;
-                _filePath = String.Format("{0}\\{1}", Path.GetDirectoryName(System.Reflection.Assembly.GetCallingAssembly().Location), _fileName);                
+                FilePath = String.Format("{0}\\{1}", Path.GetDirectoryName(System.Reflection.Assembly.GetCallingAssembly().Location), _fileName);                
             }
         }
 
-        public static string FilePath
-        {
-            get
-            {
-                return _filePath;
-            }
-            set
-            {
-                _filePath = value;                
-            }
-        }
+        #endregion
 
-        public static int MaxSize
-        {
-            get
-            {
-                return _maxSize;
-            }
-            set
-            {
-                _maxSize = value;
-            }
-        }       
+        #region Methods
 
         public static void Write(string format, params object[] arg)
         {
             try
             {
-                if (_logFile == null || _logFile.BaseStream.Length > _maxSize)
-                    CreateLogFile(_filePath.Length > 0 ? _filePath : System.Reflection.Assembly.GetCallingAssembly().Location);
+                if (_logFile == null || _logFile.BaseStream.Length > MaxSize)
+                    CreateLogFile(String.IsNullOrEmpty(FilePath) == false ? FilePath : System.Reflection.Assembly.GetCallingAssembly().Location);
 
                 if (_logFile == null)
                     return;
 
                 string message = arg.Length == 0 ? format : String.Format(format, arg);
                 message = String.Format("{0}: {1}", DateTime.Now, message);
-
-                //if (message.Length > 32)
-                //    message = String.Format("{0}: {1}", DateTime.Now, message);
-                //else
-                //{
-                //    StackFrame sf = new StackFrame(2, true);
-                //    string fn = Path.GetFileName(sf.GetFileName());
-                //    string m = sf.GetMethod().Name;
-                //    int l = sf.GetFileLineNumber();
-
-                //    message = String.Format("{0}: {1}, file: {2}, method: {3}, line: {4}", DateTime.Now, message.Replace(Environment.NewLine, string.Empty), fn, m, l);
-                //}
-
+                
                 Console.WriteLine(message);
                 _logFile.WriteLine(message);
                 _logFile.WriteLine("--------");
                 _logFile.Flush();
             }
-            catch //(Exception ex)
+            catch
             {
-                _logFile = null;
-                //Console.WriteLine(ex.ToString());
+                _logFile = null;                
             }
         }
 
@@ -117,7 +81,7 @@ namespace gTools.Log
                 if (File.Exists(filePath))
                 {
                     FileInfo fi = new FileInfo(filePath);
-                    append = fi.Length < _maxSize;
+                    append = fi.Length < MaxSize;
                     
                     if (append == false)
                         File.Copy(filePath, String.Format("{0}\\{1}.log1", fi.Directory, fi.Name.Replace(fi.Extension, string.Empty)), true); 
@@ -136,5 +100,7 @@ namespace gTools.Log
                 _logFile = null;                
             }
         }
+
+        #endregion
     }
 }
