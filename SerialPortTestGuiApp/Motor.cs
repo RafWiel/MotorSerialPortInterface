@@ -1,5 +1,6 @@
 ﻿using gTools.Log;
 using gTools.WPF;
+using SerialPortTestShared;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,7 +13,7 @@ using System.Windows.Input;
 
 namespace SerialPortTestGuiApp
 {
-    public class MotorInterfaceGui : gBindableBase
+    public class Motor : gBindableBase
     {
         #region Properties
 
@@ -90,15 +91,15 @@ namespace SerialPortTestGuiApp
 
         public void GetLsMicroFirmware()
         {
-            RunCommandTask("LS");
+            RunCommandTask(Commands.LS);
         }
 
         public void GetHsMicroFirmware()
         {
-            RunCommandTask("HS");
+            RunCommandTask(Commands.HS);
         }
 
-        private void RunCommandTask(string command)
+        private void RunCommandTask(Commands command)
         {
             if (string.IsNullOrEmpty(Port))
             {
@@ -145,7 +146,8 @@ namespace SerialPortTestGuiApp
                     //read output
                     result = process.StandardOutput.ReadToEnd();
                         
-                    Console.Write(result);
+                    if (process.ExitCode != ErrorCodes.Success)
+                        Console.Write(result);
                 }
             }
             catch (Exception ex)

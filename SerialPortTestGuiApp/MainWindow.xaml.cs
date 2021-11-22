@@ -23,13 +23,13 @@ namespace SerialPortTestGuiApp
     {
         #region Initialization
 
-        private MotorInterfaceGui _motorInterface;
+        private Motor _motorInterface;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _motorInterface = new MotorInterfaceGui { Window = this };
+            _motorInterface = new Motor { Window = this };
             this.DataContext = _motorInterface;
         }
 
