@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="ProgramTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResponseManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -74,6 +75,10 @@
     <ProjectReference Include="..\SerialPortTestConsole\SerialPortTestConsole.csproj">
       <Project>{b60157bd-d4d5-427f-8f85-eb7532081243}</Project>
       <Name>SerialPortTestConsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SerialPortTestShared\SerialPortTestShared.csproj">
+      <Project>{b89d640c-7dd1-4f1b-9b72-e8c9431125d1}</Project>
+      <Name>SerialPortTestShared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SerialPortTestShared;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
@@ -110,7 +111,7 @@ namespace Communication.Serial
             }
             catch (Exception ex)
             {
-                LogError(ex.Message);
+                ResponseManager.SendError(ErrorCodes.Exception, ex.Message);
             }            
         }
 
@@ -128,7 +129,7 @@ namespace Communication.Serial
             }
             catch (Exception ex)
             {
-                LogError(ex.Message);
+                ResponseManager.SendError(ErrorCodes.Exception, ex.Message);
             }
             finally
             {
@@ -147,15 +148,10 @@ namespace Communication.Serial
             }
             catch (Exception ex)
             {
-                LogError(ex.Message);
+                ResponseManager.SendError(ErrorCodes.Exception, ex.Message);
             }
         }
-
-        private void LogError(string message)
-        {
-            Console.WriteLine("Error: {0}", message);
-        }
-
+        
         #endregion
     }
 }

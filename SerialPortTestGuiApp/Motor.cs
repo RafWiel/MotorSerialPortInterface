@@ -115,8 +115,7 @@ namespace SerialPortTestGuiApp
 
             Task.Run(() =>
             {                
-                var result = RunCommand(String.Format("port:{0} baud:{1} command:{2}", Port, BaudRate, command));
-                ParseOutput(result);
+                RunCommand(String.Format("port:{0} baud:{1} command:{2}", Port, BaudRate, command));                
             });
         }
 
@@ -127,7 +126,10 @@ namespace SerialPortTestGuiApp
             SetMouseCursor(Cursors.Wait);
 
             try
-            {                    
+            {
+                
+
+
                 //run console application
                 using (var process = new Process())
                 {
@@ -145,9 +147,8 @@ namespace SerialPortTestGuiApp
 
                     //read output
                     result = process.StandardOutput.ReadToEnd();
-                        
-                    if (process.ExitCode != ErrorCodes.Success)
-                        Console.Write(result);
+
+                    HandleResponse(process.ExitCode, result);
                 }
             }
             catch (Exception ex)
@@ -162,25 +163,48 @@ namespace SerialPortTestGuiApp
             return result;
         }
 
-        private void ParseOutput(string output)
+        private void HandleResponse(int result, string json)
         {
-            if (output.StartsWith("Error: "))
+            if (result == ErrorCodes.Success)
             {
-                //inform user
-                Window.Dispatcher.Invoke(() => 
+                var response = ResponseManager.GetFirmware(json);
+                if (response == null)
                 {
-                    MessageBox.Show(Window, output.Trim(), Window.Title);
-                });
-                
-                return;
+                    InvokeMessageBox("Incorrect command response");
+                    return;
+                }
+
+                //update Gui
+                if (response.Command == (int)Commands.LS)
+                    LsFirmware = response.Firmware;
+
+                if (response.Command == (int)Commands.HS)
+                    HsFirmware = response.Firmware;
             }
+            else
+            {
+                //show error message
+                var errors = ResponseManager.GetErrors(json);
+                if (errors.Count == 0)
+                {
+                    InvokeMessageBox("Incorrect command response");
+                    return;
+                }
 
-            //update Gui
-            if (output.StartsWith("LS: "))
-                LsFirmware = output.Replace("LS: ", string.Empty).Trim();
+                string message = string.Format("{0} occured:\r\n{1}",
+                    errors.Count == 1 ? "Error" : "Errors",
+                    string.Join("\r\n", errors.Select(u => u.ErrorMessage)));
 
-            if (output.StartsWith("HS: "))
-                HsFirmware = output.Replace("HS: ", string.Empty).Trim();
+                InvokeMessageBox(message);                
+            }            
+        }
+
+        private void InvokeMessageBox(string message)
+        {
+            Window.Dispatcher.Invoke(() =>
+            {
+                MessageBox.Show(Window, message, Window.Title);
+            });
         }
 
         private void SetMouseCursor(Cursor cursor)

@@ -60,7 +60,7 @@ namespace SerialPortTestConsole
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: {0}", ex.Message);
+                ResponseManager.SendError(ErrorCodes.Exception, ex.Message);                
                 return ErrorCodes.Exception;
             }
         }
@@ -70,13 +70,13 @@ namespace SerialPortTestConsole
             //validate input
             if (String.IsNullOrWhiteSpace(port))
             {
-                Console.WriteLine("Error: COM port not set");
+                ResponseManager.SendError(ErrorCodes.UnknownPort, "COM port not set");
                 return ErrorCodes.UnknownPort;
             }
 
             if (baudRate == 0)
             {
-                Console.WriteLine("Error: BaudRate not set");
+                ResponseManager.SendError(ErrorCodes.UnknownBaudRate, "BaudRate not set");
                 return ErrorCodes.UnknownBaudRate;
             }
                             
@@ -85,7 +85,7 @@ namespace SerialPortTestConsole
 
             if (_serial.IsOpen == false)
             {
-                Console.WriteLine("Error: Port open failed");
+                ResponseManager.SendError(ErrorCodes.PortClosed, "COM port is closed");
                 return ErrorCodes.PortClosed;
             }
 
@@ -113,11 +113,11 @@ namespace SerialPortTestConsole
             //asynchronous communication, wait for reponse
             if (WaitForResponse() == false)
             {
-                Console.WriteLine("Error: Command timed out");
+                ResponseManager.SendError(ErrorCodes.Timeout, "Command timed out");
                 return ErrorCodes.Timeout;
             }
 
-            Console.WriteLine("{0}: {1}", _command, _response);
+            ResponseManager.SendFirmware((int)_command, _response);
             return ErrorCodes.Success;
         }
 
