@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SerialPortTestConsole
 {
-    public class Program
+    public static class Program
     {
         static int Main(string[] args)
         {
@@ -34,13 +34,13 @@ namespace SerialPortTestConsole
             if (args.Length != 3)
                 return false;
 
-            if (args.Count(u => u.StartsWith("port:")) == 0)
+            if (args.Any(u => u.StartsWith("port:")) == false)
                 return false;
 
-            if (args.Count(u => u.StartsWith("baud:")) == 0)
+            if (args.Any(u => u.StartsWith("baud:")) == false)
                 return false;
 
-            if (args.Count(u => u.StartsWith("command:")) == 0)
+            if (args.Any(u => u.StartsWith("command:")) == false)
                 return false;
 
             //expect comX

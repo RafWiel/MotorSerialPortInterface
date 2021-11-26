@@ -14,9 +14,9 @@ namespace SerialPortTestConsole
     {
         #region Initialization
 
-        private SerialConnection _serial = new SerialConnection();        
+        private readonly SerialConnection _serial = new SerialConnection();        
         private string _response = string.Empty;
-        private Commands _command;        
+        private MotorCommands _command;        
 
         public Motor()
         {              
@@ -29,8 +29,14 @@ namespace SerialPortTestConsole
 
         public void Dispose()
         {
-            _serial.ClosePort();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            _serial.ClosePort();
+        }        
 
         #endregion               
 
@@ -50,10 +56,10 @@ namespace SerialPortTestConsole
                     return result;
 
                 //run command
-                if (command.Equals(Commands.LS.ToString()))
+                if (command.Equals(MotorCommands.LS.ToString()))
                     return GetLsMicroFirmware();
 
-                if (command.Equals(Commands.HS.ToString()))
+                if (command.Equals(MotorCommands.HS.ToString()))
                     return GetHsMicroFirmware();
 
                 return ErrorCodes.UnsupportedCommand;
@@ -94,13 +100,13 @@ namespace SerialPortTestConsole
 
         private int GetLsMicroFirmware()
         {
-            _command = Commands.LS;
+            _command = MotorCommands.LS;
             return RunCommand("v\n");            
         }
 
         private int GetHsMicroFirmware()
         {
-            _command = Commands.HS;
+            _command = MotorCommands.HS;
             return RunCommand("V\n");
         }
 

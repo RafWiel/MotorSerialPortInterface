@@ -104,7 +104,10 @@ namespace Communication.Serial
                             readAction();
                         }, null);
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        ResponseManager.SendError(ErrorCodes.Exception, ex.Message);
+                    }
                 };
 
                 readAction();

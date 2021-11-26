@@ -19,7 +19,7 @@ namespace SerialPortTestShared
         public string Firmware { get; set; }        
     }
 
-    public class ResponseManager
+    public static class ResponseManager
     {
         public static void SendError(int errorCode, string format, params object[] args)
         {

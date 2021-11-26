@@ -3,7 +3,7 @@ using System.IO;
 
 namespace gTools.Log
 {    
-    public class gLog
+    public static class gLog
     {
         #region Initialization
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SerialPortTestShared
 {
-    public class ErrorCodes
+    public static class ErrorCodes
     {
         public const int Success = 0;        
         public const int IncorrectParameters = 1;

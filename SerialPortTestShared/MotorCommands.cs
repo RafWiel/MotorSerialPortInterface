@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SerialPortTestShared
 {
-    public enum Commands
+    public enum MotorCommands
     {        
         LS = 1,
         HS = 2        
