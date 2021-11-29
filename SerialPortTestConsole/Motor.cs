@@ -35,7 +35,7 @@ namespace SerialPortTestConsole
 
         protected virtual void Dispose(bool disposing)
         {
-            _serial.ClosePort();
+            _serial.Dispose();
         }        
 
         #endregion               

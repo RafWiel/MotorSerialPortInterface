@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Communication.Serial
 {
-    public class SerialConnection
+    public class SerialConnection : IDisposable
     {
         #region Initialization
 
@@ -37,6 +37,17 @@ namespace Communication.Serial
                 115200,
                 230400
             });
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            _serialPort.Close();
         }
 
         #endregion

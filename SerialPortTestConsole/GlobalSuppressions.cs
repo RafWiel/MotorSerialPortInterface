@@ -13,3 +13,5 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1125:Boolean literals should not be redundant", Justification = "<Pending>", Scope = "member", Target = "~P:Communication.Serial.SerialConnection.IsOpen")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1125:Boolean literals should not be redundant", Justification = "<Pending>", Scope = "member", Target = "~M:Communication.Serial.SerialConnection.OpenPort(System.String,System.Int32)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1125:Boolean literals should not be redundant", Justification = "<Pending>", Scope = "member", Target = "~M:Communication.Serial.SerialConnection.ClosePort")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Scope = "member", Target = "Communication.Serial.SerialConnection.#DataReceived")]
+
